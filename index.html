@@ -55,11 +55,6 @@
 
     <div id="uniModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 w-full max-w-lg rounded-t-[2rem] sm:rounded-[2rem] border-t border-white/10 max-h-[70vh] flex flex-col overflow-hidden">
-<<<<<<< HEAD
-            <div class="p-6 border-b border-white/5 flex justify-between items-center bg-slate-800/50">
-                <h3 class="text-white font-bold text-xl">Select Institution</h3>
-                <button type="button" title="Close" onclick="toggleUniModal()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white"><i class="fas fa-times"></i></button>
-=======
             <div class="p-6 border-b border-white/5 bg-slate-800/50">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-white font-bold text-xl">Select Institution</h3>
@@ -69,15 +64,12 @@
                     <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500"></i>
                     <input type="text" id="uniSearch" placeholder="Search universities..." class="w-full p-3 pl-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-green-500 outline-none transition" oninput="filterUniversities()">
                 </div>
->>>>>>> 16b2775 (update website)
             </div>
             <div id="uniList" class="p-4 overflow-y-auto custom-scrollbar grid grid-cols-1 gap-2">
                 </div>
         </div>
     </div>
 
-<<<<<<< HEAD
-=======
     <div id="otpPortal" class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6">
     <div class="w-full max-w-md bg-white/5 border border-white/10 p-8 rounded-[2.5rem] text-center space-y-6">
         <div class="bg-green-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto">
@@ -100,8 +92,6 @@
         </button>
     </div>
 </div>
-
->>>>>>> 16b2775 (update website)
     <script>
         // CONFIG - FILL THESE TWO
         const supabaseUrl = 'https://loppfyncbehifnspupwa.supabase.co';
@@ -273,20 +263,6 @@
         function toggleUniModal() {
             const modal = document.getElementById('uniModal');
             modal.classList.toggle('hidden');
-<<<<<<< HEAD
-            if (document.getElementById('uniList').innerHTML.trim() === "") {
-                // Use data attributes + encoder to avoid breaking the inline onclick when
-                // university names contain quotes. selectUniFromElement will decode.
-                document.getElementById('uniList').innerHTML = nigerianUnis.map(uni => `
-                    <div data-uni="${encodeURIComponent(uni)}" onclick="selectUniFromElement(this)" class="p-4 bg-white/5 border border-white/5 rounded-2xl text-slate-300 hover:bg-green-500/10 hover:border-green-500/30 cursor-pointer transition flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-green-500/20 text-green-500 flex items-center justify-center font-bold text-xs">${uni[0]}</div>
-                        ${uni}
-                    </div>
-                `).join('');
-            }
-        }
-
-=======
             if (document.getElementById('uniList').innerHTML.trim() === "" || !modal.classList.contains('hidden')) {
                 document.getElementById('uniSearch').value = '';
                 populateUniList(nigerianUnis);
@@ -315,8 +291,6 @@
             );
             populateUniList(filtered);
         }
-
->>>>>>> 16b2775 (update website)
         function selectUni(name) {
             document.getElementById('signupUniversity').value = name;
             document.getElementById('selectedUniLabel').innerText = name;
@@ -334,27 +308,6 @@
             }
         }
 
-<<<<<<< HEAD
-        async function handleSignup() {
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const name = document.getElementById('signupName').value;
-            const uni = document.getElementById('signupUniversity').value;
-
-            if(!email || !password || !uni) return alert("All fields are required to join the Core.");
-
-            const { data, error } = await _supabase.auth.signUp({
-                email, password, options: { data: { full_name: name, university: uni } }
-            });
-
-            if (error) alert(error.message);
-            else {
-                alert("Success! Welcome to CampusCORE.");
-                window.location.href = 'dashboard.html';
-            }
-        }
-
-=======
         async function ensureProfileRow(userId, fullName, university) {
             if (!userId) return;
             try {
@@ -450,8 +403,6 @@ function closeOtpPortal() {
     document.getElementById('otpPortal').classList.add('hidden');
     document.getElementById('otpCode').value = '';
 }
-
->>>>>>> 16b2775 (update website)
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
