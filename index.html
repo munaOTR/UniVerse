@@ -55,15 +55,53 @@
 
     <div id="uniModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-slate-900 w-full max-w-lg rounded-t-[2rem] sm:rounded-[2rem] border-t border-white/10 max-h-[70vh] flex flex-col overflow-hidden">
+<<<<<<< HEAD
             <div class="p-6 border-b border-white/5 flex justify-between items-center bg-slate-800/50">
                 <h3 class="text-white font-bold text-xl">Select Institution</h3>
                 <button type="button" title="Close" onclick="toggleUniModal()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white"><i class="fas fa-times"></i></button>
+=======
+            <div class="p-6 border-b border-white/5 bg-slate-800/50">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white font-bold text-xl">Select Institution</h3>
+                    <button type="button" title="Close" onclick="toggleUniModal()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500"></i>
+                    <input type="text" id="uniSearch" placeholder="Search universities..." class="w-full p-3 pl-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-green-500 outline-none transition" oninput="filterUniversities()">
+                </div>
+>>>>>>> 16b2775 (update website)
             </div>
             <div id="uniList" class="p-4 overflow-y-auto custom-scrollbar grid grid-cols-1 gap-2">
                 </div>
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+    <div id="otpPortal" class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6">
+    <div class="w-full max-w-md bg-white/5 border border-white/10 p-8 rounded-[2.5rem] text-center space-y-6">
+        <div class="bg-green-500/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto">
+            <i class="fas fa-envelope-open-text text-green-500 text-2xl"></i>
+        </div>
+        <div>
+            <h2 class="text-2xl font-black text-white">Check your mail</h2>
+            <p class="text-slate-400 text-sm mt-2">We sent a 6-digit code to your university email.</p>
+        </div>
+        
+        <input type="text" id="otpCode" placeholder="0 0 0 0 0 0" 
+               class="w-full bg-white/5 border-2 border-dashed border-white/20 p-5 rounded-2xl text-center text-3xl font-black tracking-[1rem] text-green-500 outline-none focus:border-green-500 transition-all">
+        
+        <button onclick="verifyMyCode()" class="w-full scholar-gradient py-4 rounded-2xl text-black font-black shadow-lg shadow-green-500/20">
+            VERIFY & ORBIT
+        </button>
+        
+        <button onclick="closeOtpPortal()" class="text-slate-500 text-xs font-bold uppercase tracking-widest">
+            Back to Signup
+        </button>
+    </div>
+</div>
+
+>>>>>>> 16b2775 (update website)
     <script>
         // CONFIG - FILL THESE TWO
         const supabaseUrl = 'https://loppfyncbehifnspupwa.supabase.co';
@@ -235,6 +273,7 @@
         function toggleUniModal() {
             const modal = document.getElementById('uniModal');
             modal.classList.toggle('hidden');
+<<<<<<< HEAD
             if (document.getElementById('uniList').innerHTML.trim() === "") {
                 // Use data attributes + encoder to avoid breaking the inline onclick when
                 // university names contain quotes. selectUniFromElement will decode.
@@ -247,6 +286,37 @@
             }
         }
 
+=======
+            if (document.getElementById('uniList').innerHTML.trim() === "" || !modal.classList.contains('hidden')) {
+                document.getElementById('uniSearch').value = '';
+                populateUniList(nigerianUnis);
+            }
+        }
+
+        function populateUniList(unis) {
+            // Use data attributes + encoder to avoid breaking the inline onclick when
+            // university names contain quotes. selectUniFromElement will decode.
+            document.getElementById('uniList').innerHTML = unis.map(uni => `
+                <div data-uni="${encodeURIComponent(uni)}" onclick="selectUniFromElement(this)" class="p-4 bg-white/5 border border-white/5 rounded-2xl text-slate-300 hover:bg-green-500/10 hover:border-green-500/30 cursor-pointer transition flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-green-500/20 text-green-500 flex items-center justify-center font-bold text-xs">${uni[0]}</div>
+                    ${uni}
+                </div>
+            `).join('');
+            
+            if (unis.length === 0) {
+                document.getElementById('uniList').innerHTML = '<div class="p-8 text-center text-slate-400">No universities found</div>';
+            }
+        }
+
+        function filterUniversities() {
+            const searchTerm = document.getElementById('uniSearch').value.toLowerCase();
+            const filtered = nigerianUnis.filter(uni => 
+                uni.toLowerCase().includes(searchTerm)
+            );
+            populateUniList(filtered);
+        }
+
+>>>>>>> 16b2775 (update website)
         function selectUni(name) {
             document.getElementById('signupUniversity').value = name;
             document.getElementById('selectedUniLabel').innerText = name;
@@ -264,6 +334,7 @@
             }
         }
 
+<<<<<<< HEAD
         async function handleSignup() {
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
@@ -283,6 +354,104 @@
             }
         }
 
+=======
+        async function ensureProfileRow(userId, fullName, university) {
+            if (!userId) return;
+            try {
+                const { data: existing, error: fetchErr } = await _supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('id', userId)
+                    .single();
+
+                if (fetchErr && fetchErr.code !== 'PGRST116') {
+                    console.error('Could not verify existing profile row:', fetchErr);
+                    return;
+                }
+
+                if (!existing) {
+                    const { error: insertErr } = await _supabase.from('profiles').insert({
+                        id: userId,
+                        full_name: fullName || null,
+                        university: university || null,
+                        wallet_balance: 0,
+                        reputation_stars: 0,
+                        bio: null,
+                        created_at: new Date().toISOString()
+                    });
+                    if (insertErr) console.error('Failed to create profile row:', insertErr);
+                }
+            } catch (err) {
+                console.error('ensureProfileRow error:', err);
+            }
+        }
+
+       async function handleSignup() {
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const school = document.getElementById('signupUniversity').value;
+
+    if(!email || !password || !school || !name) {
+        alert("All fields are required to join the Verse.");
+        return;
+    }
+
+    // 1. Sign up the user
+    const { data, error } = await _supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: { full_name: name, university: school }
+        }
+    });
+
+    if (error) {
+        alert("Signup Error: " + error.message);
+    } else {
+        if (data?.user?.id) {
+            await ensureProfileRow(data.user.id, name, school);
+        }
+        // 2. Show the OTP Portal instead of redirecting
+        document.getElementById('otpPortal').classList.remove('hidden');
+        // Save the email temporarily to use in the next step
+        window.tempEmail = email; 
+    }
+}
+
+async function verifyMyCode() {
+    const token = document.getElementById('otpCode').value;
+    const email = window.tempEmail;
+
+    // 3. Verify the 6-digit code with Supabase
+    const { data, error } = await _supabase.auth.verifyOtp({
+        email: email,
+        token: token,
+        type: 'signup'
+    });
+
+    if (error) {
+        alert("Invalid or Expired Code: " + error.message);
+    } else {
+        alert("Identity Verified! Welcome to UniVERSE.");
+        const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
+        if (session?.user) {
+            await ensureProfileRow(
+                session.user.id,
+                session.user.user_metadata?.full_name,
+                session.user.user_metadata?.university
+            );
+        }
+        window.location.href = 'dashboard.html'; // Direct access to dashboard
+    }
+}
+
+function closeOtpPortal() {
+    document.getElementById('otpPortal').classList.add('hidden');
+    document.getElementById('otpCode').value = '';
+}
+
+>>>>>>> 16b2775 (update website)
         async function handleLogin() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
